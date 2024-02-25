@@ -1,5 +1,6 @@
 @echo off
-
+setlocal EnableDelayedExpansion
+::
 :: Вид сборки / суффикс в названии каталога сборки
 ::
 :: "Ninja" / "ninja"
@@ -20,6 +21,15 @@ cd %BUILD_FOLDER%
 cmake -G %BUILD_TYPE% ..\%SOURCE_FOLDER%
 cmake --build .
 
-copy ..\%SOURCE_FOLDER%\bubble_sort\run_bubble_sort.bat .\bubble_sort
-copy ..\%SOURCE_FOLDER%\bubble_sort_mf\run_bubble_sort_mf.bat .\bubble_sort_mf
-copy ..\%SOURCE_FOLDER%\selection_sort\run_selection_sort.bat .\selection_sort
+set arr[0].file=run_bubble_sort.bat
+set arr[1].file=run_bubble_sort_mf.bat
+set arr[2].file=run_selection_sort.bat
+
+set arr[0].folder=bubble_sort
+set arr[1].folder=bubble_sort_mf
+set arr[2].folder=selection_sort
+
+
+for /L %%i in (0,1,2) do ( 
+	copy ..\%SOURCE_FOLDER%\!arr[%%i].folder!\!arr[%%i].file! .\!arr[%%i].folder!
+)

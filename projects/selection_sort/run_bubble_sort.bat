@@ -2,4 +2,4 @@
 chcp 65001 > log
 del log
 
-bubble_sort.exe
+selection_sort.exe
