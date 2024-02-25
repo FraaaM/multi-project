@@ -4,5 +4,6 @@ project(multi_proj_2023)
 
 add_subdirectory(bubble_sort)
 add_subdirectory(bubble_sort_mf)
+add_subdirectory(selection_sort)
 
 set(CMAKE_SUPPRESS_REGENERATION true)
