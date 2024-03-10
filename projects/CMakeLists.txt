@@ -10,5 +10,6 @@ add_subdirectory(bubble_sort_mf)
 add_subdirectory(selection_sort)
 add_subdirectory(obuchaika)
 add_subdirectory(unit_test_example)
+add_subdirectory(scl)
 
 set(CMAKE_SUPPRESS_REGENERATION true)
