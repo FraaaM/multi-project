@@ -2,23 +2,55 @@
 
 namespace MCherevko {
 	LongNumber::LongNumber() {
-		// TODO
+		numbers = new int[1];
+		numbers[0] = 0;
+		length = 1;
+		sign = NULL;
 	}
 	
 	LongNumber::LongNumber(const char* const str) {
-		// TODO
+		length = get_length(str);
+
+		if (str[0] == MINUS) {
+			sign = NEGATIVE;
+			length--;
+			numbers = new int[length];
+			for (int i = 0; i < length; i++) {
+				numbers[i] = str[i + 1] - STR_NULL;
+			}
+		}
+		else {
+			int sign = POSITIVE;
+			numbers = new int[length];
+			for (int i = 0; i < length; i++) {
+				numbers[i] = str[i] - STR_NULL;
+			}
+		}
 	}
 	
 	LongNumber::LongNumber(const LongNumber& x) {
-		// TODO
+		length = x.length;
+		sign = x.sign;
+		numbers = new int[length];
+		
+		for (int i = 0; i < length; ++i) {
+			numbers[i] = x.numbers[i];
+		}
 	}
 	
 	LongNumber::LongNumber(LongNumber&& x) {
-		// TODO
+		numbers = x.numbers;
+		length = x.length;
+		sign = x.sign;
+
+		x.numbers = new int[1];
+		x.numbers[0] = 0;
+		x.length = 1;
+		x.sign = NULL;
 	}
 	
 	LongNumber::~LongNumber() {
-		// TODO
+		delete[] numbers;
 	}
 	
 	LongNumber& LongNumber::operator = (const char* const str) {
@@ -93,8 +125,12 @@ namespace MCherevko {
 	// PRIVATE
 	// ----------------------------------------------------------
 	int LongNumber::get_length(const char* const str) const {
-		// TODO
-		int length = 0;
+		const char* l = str;
+		while (*l) {
+			++l;
+		}
+		auto length = (l - str);
+		
 		return length;
 	}
 	

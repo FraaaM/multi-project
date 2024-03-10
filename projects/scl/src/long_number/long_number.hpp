@@ -4,6 +4,7 @@
 
 namespace MCherevko {
 	class LongNumber {
+		static const char STR_NULL = '0';
 		static const char END = '\0';
 		static const char MINUS = '-';
 		static const int NEGATIVE = -1;

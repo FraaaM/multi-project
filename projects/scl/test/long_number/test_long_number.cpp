@@ -17,7 +17,7 @@ TEST(get_digits_number, check_negative) {
 class EqualityFixture : public testing::Test {
 	public:
 		MCherevko::LongNumber one_v1 = MCherevko::LongNumber("1");
-		MCherevkoLongNumber one_v2 = MCherevko::LongNumber("1");
+		MCherevko::LongNumber one_v2 = MCherevko::LongNumber("1");
 		MCherevko::LongNumber twelve = MCherevko::LongNumber("12");
 		MCherevko::LongNumber negative_one = MCherevko::LongNumber("-1");
 };
