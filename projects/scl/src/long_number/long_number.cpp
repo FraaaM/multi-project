@@ -1,4 +1,4 @@
-#include "long_number.h"
+#include "long_number.hpp"
 
 namespace MCherevko {
 	LongNumber::LongNumber() {
