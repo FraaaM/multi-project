@@ -1,29 +1,34 @@
-#include "long_number.hpp"
+#include "long_number.h"
 
 namespace MCherevko {
-	LongNumber::LongNumber() {
-		numbers = new int[1];
+	LongNumber::LongNumber() : length(1), sign(NULL) {
+		numbers = new int[length];
 		numbers[0] = 0;
-		length = 1;
-		sign = NULL;
+	}
+
+	LongNumber::LongNumber(int length, int sign) : length(length), sign(sign) {
+		numbers = new int[length];
+		for (int i = 0; i < length; i++) {
+			numbers[i] = 0;
+		}
 	}
 
 	LongNumber::LongNumber(const char* const str) {
-		length = get_lenght(str);
+		length = get_length(str);
 
 		if (str[0] == MINUS) {
 			sign = NEGATIVE;
 			length--;
 			numbers = new int[length];
 			for (int i = 0; i < length; i++) {
-				numbers[i] = str[i + 1] - STR_NULL;
+				numbers[i] = str[i + 1] - ZERO;
 			}
 		}
 		else {
 			int sign = POSITIVE;
 			numbers = new int[length];
 			for (int i = 0; i < length; i++) {
-				numbers[i] = str[i] - STR_NULL;
+				numbers[i] = str[i] - ZERO;
 			}
 		}
 	}
@@ -50,26 +55,28 @@ namespace MCherevko {
 	}
 
 	LongNumber::~LongNumber() {
+		length = 0;
 		delete[] numbers;
+		numbers = nullptr;
 	}
 
 	LongNumber& LongNumber::operator = (const char* const str) {
 		delete[] numbers;
-		length = get_lenght(str);
+		length = get_length(str);
 
 		if (str[0] == MINUS) {
 			sign = NEGATIVE;
 			length--;
 			numbers = new int[length];
 			for (int i = 0; i < length; i++) {
-				numbers[i] = str[i + 1] - STR_NULL;
+				numbers[i] = str[i + 1] - ZERO;
 			}
 		}
 		else {
 			int sign = POSITIVE;
 			numbers = new int[length];
 			for (int i = 0; i < length; i++) {
-				numbers[i] = str[i] - STR_NULL;
+				numbers[i] = str[i] - ZERO;
 			}
 		}
 		return *this;
@@ -101,7 +108,7 @@ namespace MCherevko {
 		return *this;
 	}
 
-	bool LongNumber::operator == (const LongNumber& x) {
+	bool LongNumber::operator == (const LongNumber& x) const {
 		if (length != x.length || sign != x.sign) {
 			return false;
 		}
@@ -114,41 +121,43 @@ namespace MCherevko {
 		return true;
 	}
 
-	bool LongNumber::operator > (const LongNumber& x) {
+	bool LongNumber::operator!= (const LongNumber& x) const {
+		return !(*this == x);
+	}
+
+	bool LongNumber::operator > (const LongNumber& x) const {
 
 		return true;
 	}
 
-	bool LongNumber::operator < (const LongNumber& x) {
+	bool LongNumber::operator < (const LongNumber& x)  const {
 		// TODO
 		return true;
 	}
 
-	LongNumber LongNumber::operator + (const LongNumber& x) {
-		// TODO
-		LongNumber result;
-		return result;
+	LongNumber LongNumber::operator + (const LongNumber& x) const {
+		return *this;
 	}
 
-	LongNumber LongNumber::operator - (const LongNumber& x) {
+	LongNumber LongNumber::operator - (const LongNumber& x) const {
 		// TODO
 		LongNumber result = x;
 		return result;
 	}
 
-	LongNumber LongNumber::operator * (const LongNumber& x) {
+	LongNumber LongNumber::operator * (const LongNumber& x) const {
 		// TODO
 		LongNumber result;
 		return result;
 	}
 
-	LongNumber LongNumber::operator / (const LongNumber& x) {
+	LongNumber LongNumber::operator / (const LongNumber& x) const {
 		// TODO
 		LongNumber result;
 		return result;
 	}
 
-	LongNumber LongNumber::operator % (const LongNumber& x) {
+	LongNumber LongNumber::operator % (const LongNumber& x) const {
 		// TODO
 		LongNumber result;
 		return result;
@@ -164,11 +173,7 @@ namespace MCherevko {
 		return length;
 	}
 
-	bool LongNumber::is_positive() const {
-		return sign == POSITIVE;
-	}
-
-	int LongNumber::get_lenght(const char* const str) const {
+	int LongNumber::get_length(const char* const str) const {
 		const char* l = str;
 		while (*l) {
 			++l;
@@ -177,6 +182,10 @@ namespace MCherevko {
 
 		return length;
 	}
+	bool LongNumber::is_negative() const {
+		return sign == NEGATIVE;
+	}
+
 
 	std::ostream& operator << (std::ostream& os, const LongNumber& x) {
 		if (x.sign == -1)
