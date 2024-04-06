@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <iostream>
@@ -34,7 +33,7 @@ namespace MCherevko {
 		bool operator < (const LongNumber& x) const;
 
 		LongNumber operator + (const LongNumber& x) const;
-		LongNumber operator - (const LongNumber& x) const;
+		LongNumber operator - (LongNumber& x);
 		LongNumber operator * (const LongNumber& x) const;
 		LongNumber operator / (const LongNumber& x) const;
 		LongNumber operator % (const LongNumber& x) const;
