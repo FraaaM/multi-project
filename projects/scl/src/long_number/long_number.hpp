@@ -33,13 +33,13 @@ namespace MCherevko {
 		bool operator < (const LongNumber& x) const;
 
 		LongNumber operator + (const LongNumber& x) const;
-		LongNumber operator - (LongNumber& x);
+		LongNumber operator - (const LongNumber& x) const;
 		LongNumber operator * (const LongNumber& x) const;
 		LongNumber operator / (const LongNumber& x) const;
 		LongNumber operator % (const LongNumber& x) const;
 
 		int get_digits_number() const;
-		//int get_rank_number(int rank) const;
+		int get_rank_number(int rank) const;
 		bool is_negative() const;
 		void print_numbers();
 

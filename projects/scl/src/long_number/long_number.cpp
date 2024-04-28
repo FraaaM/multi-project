@@ -1,7 +1,7 @@
 #include "long_number.hpp"
 
 namespace MCherevko {
-	LongNumber::LongNumber() : length(1), sign(NULL) {
+	LongNumber::LongNumber() : length(1), sign(0) {
 		numbers = new int[length];
 		numbers[0] = 0;
 	}
@@ -49,25 +49,21 @@ namespace MCherevko {
 		}
 	}
 	*/
+	
 	LongNumber::LongNumber(const LongNumber& x) {
 		length = x.length;
 		sign = x.sign;
 		numbers = new int[length];
-
-		for (int i = 0; i < length; ++i) {
+		for (int i = 0; i < length; i++) {
 			numbers[i] = x.numbers[i];
 		}
 	}
 
 	LongNumber::LongNumber(LongNumber&& x) {
-		numbers = x.numbers;
 		length = x.length;
 		sign = x.sign;
-
-		x.numbers = new int[1];
-		x.numbers[0] = 0;
-		x.length = 1;
-		x.sign = NULL;
+		numbers = x.numbers;
+		x.numbers = nullptr;
 	}
 
 	LongNumber::~LongNumber() {
@@ -92,7 +88,7 @@ namespace MCherevko {
 			int sign = POSITIVE;
 			numbers = new int[length];
 			for (int i = 0; i < length; i++) {
-				numbers[i] = str[i] - ZERO;
+				numbers[i] = str[length - i - 1] - ZERO;
 			}
 		}
 		return *this;
@@ -118,7 +114,7 @@ namespace MCherevko {
 			x.numbers = new int[1];
 			x.numbers[0] = 0;
 			x.length = 1;
-			x.sign = NULL;
+			x.sign = 0;
 		}
 
 		return *this;
@@ -142,17 +138,42 @@ namespace MCherevko {
 	}
 
 	bool LongNumber::operator > (const LongNumber& x) const {
+		if (this == &x) return false;
 
-		return true;
+		if (sign != x.sign) {
+			if (sign == POSITIVE) return true;
+			else return false;
+		}
+		else {
+			bool is_bigger = false;
+
+			if (length > x.length) {
+				is_bigger = true;
+			}
+			else if (length == x.length) {
+				int i = 0;
+				while (
+					i < length - 1
+					&& numbers[length - i - 1] == x.numbers[length - i - 1]
+					) {
+					i++;
+				}
+				if (numbers[length - i - 1] > x.numbers[length - i - 1]) {
+					is_bigger = true;
+				}
+			}
+
+			if (sign == POSITIVE) return is_bigger;
+			else return !is_bigger;
+		}
 	}
 
-	bool LongNumber::operator < (const LongNumber& x)  const {
-		// TODO
-		return true;
+	bool LongNumber::operator < (const LongNumber& x) const {
+		return (*this != x) && !(*this > x);
 	}
 
+	// Не реализован случай когда результат равен 0
 	LongNumber LongNumber::operator + (const LongNumber& x) const {
-
 		if (sign == x.sign) {
 			int max_length = length > x.length ? length : x.length;
 			max_length++;
@@ -173,6 +194,11 @@ namespace MCherevko {
 			while (result.numbers[result.length - 1] == 0) {
 				result.length--;
 			}
+
+			if (result.length == 1 && result.numbers[0] == 0) {
+				result.sign = POSITIVE;
+			}
+
 			return result;
 		}
 
@@ -221,37 +247,110 @@ namespace MCherevko {
 			while (result.numbers[result.length - 1] == 0) {
 				result.length--;
 			}
+
+			if (result.length == 1 && result.numbers[0] == 0) {
+				result.sign = POSITIVE;
+			}
+
 			return result;
 		}
 
 	}
 
-	LongNumber LongNumber::operator - (LongNumber& x) {
+	LongNumber LongNumber::operator - (const LongNumber& x) const {
+		LongNumber result = x;
 		if (x.sign == POSITIVE) {
-			x.sign = NEGATIVE;
+			result.sign = NEGATIVE;
 		}
 		if (x.sign == NEGATIVE) {
-			x.sign = POSITIVE;
+			result.sign = POSITIVE;
 		}
-		return (*this + x);
+		return (result + *this);
 	}
 
 	LongNumber LongNumber::operator * (const LongNumber& x) const {
-		// TODO
-		LongNumber result;
+		LongNumber result(length + x.length, sign * x.sign);
+
+		for (int i = 0; i < x.length; i++) {
+			for (int j = 0; j < length; j++) {
+				result.numbers[j + i] += x.numbers[i] * numbers[j];
+				if (result.numbers[i + j] > 9) {
+					int q = result.numbers[i + j] / 10;
+					result.numbers[i + j + 1] += q;
+					result.numbers[i + j] -= q * 10;
+				}
+			}
+		}
+
+		while (result.length > 1 && result.numbers[result.length - 1] == 0) {
+			result.length--;
+		}
+
 		return result;
 	}
 
 	LongNumber LongNumber::operator / (const LongNumber& x) const {
-		// TODO
 		LongNumber result;
+
+		if (x.length == 1 && x.numbers[0] == 0) {
+			// TODO ZeroDivisionException
+		}
+
+		LongNumber divident = *this;
+		divident.sign = 1;
+		if (divident < x) {
+			return result;
+		}
+		else {
+			result = LongNumber(length - x.length + 1, sign * x.sign);
+
+			for (int i = 0; i < result.length; i++) {
+				LongNumber divider = LongNumber(length - i, 1);
+
+				for (int j = 0; j < x.length; j++) {
+					divider.numbers[length - x.length - i + j] = x.numbers[j];
+				}
+
+				int k = 0;
+				while (divident > divider || divident == divider) {
+					k++;
+					divident = divident - divider;
+				}
+				result.numbers[result.length - i - 1] = k;
+			}
+		}
+
+		while (
+			result.length > 1
+			&& result.numbers[result.length - 1] == 0
+			) {
+			result.length--;
+		}
+
 		return result;
 	}
 
 	LongNumber LongNumber::operator % (const LongNumber& x) const {
-		// TODO
-		LongNumber result;
-		return result;
+		if (is_negative()) {
+			LongNumber np_1 = x.is_negative() ? "1" : "-1";
+			return *this - (*this / x + np_1) * x;
+		}
+		else {
+			return *this - (*this / x) * x;
+		}
+	}
+
+	int LongNumber::get_digits_number() const {
+		return length;
+	}
+
+	int LongNumber::get_rank_number(int rank) const {
+		// TODO OutOfBoundException
+		return numbers[rank - 1];
+	}
+
+	bool LongNumber::is_negative() const {
+		return sign == NEGATIVE;
 	}
 
 	void LongNumber::print_numbers() {
@@ -259,9 +358,6 @@ namespace MCherevko {
 			std::cout << this->numbers[i] << ' ';
 		}
 		std::cout << std::endl;
-	}
-	int LongNumber::get_digits_number() const {
-		return length;
 	}
 
 	int LongNumber::get_length(const char* const str) const {
@@ -272,9 +368,6 @@ namespace MCherevko {
 		auto length = (l - str);
 
 		return length;
-	}
-	bool LongNumber::is_negative() const {
-		return sign == NEGATIVE;
 	}
 
 	std::ostream& operator << (std::ostream& os, const LongNumber& x) {
@@ -287,5 +380,6 @@ namespace MCherevko {
 		return os;
 
 	}
-
 }
+
+

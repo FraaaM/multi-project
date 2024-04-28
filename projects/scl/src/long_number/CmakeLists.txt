@@ -1,10 +1,11 @@
-target_sources(scl_lib 
+target_sources(${SCL_LIB} 
 	PRIVATE
 		long_number.cpp
 	PUBLIC
 		long_number.hpp
+		long_number_exception.hpp
 )
 
-target_include_directories(scl_lib PUBLIC
-	"${PROJECT_SOURCE_DIR}/src/long_number"
+target_include_directories(${SCL_LIB} PUBLIC
+	${PROJECT_SOURCE_DIR}/src/long_number
 )
