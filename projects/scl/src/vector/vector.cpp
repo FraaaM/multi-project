@@ -88,9 +88,49 @@ namespace MCherevko {
         }
         return false;
     }
+
+    template <typename T>
+    bool Vector<T>::remove_all(const T& value) {
+        size_t first = 0, result = 0;
+        
+        while(first < vec_size ) {
+            if (arr[first] != value && result == first ) {
+                first++;
+                result++;
+            }
+            if (arr[first] == value ) {
+                first++;
+            }
+            
+            if (arr[first] != value && result != first ) {
+                arr[result] = arr[first];
+                first++;
+                result++;
+            }
+        }
+
+        int size = vec_size;
+        
+        /*for (int i = size - 1; i >= result; i--) {
+            //delete arr[i];
+            vec_size--;
+        }*/    
+        /*for(int i = 0; i < vec_size; i++) {
+            if (arr[i] == value) { return false };
+            else {return true};
+        }*/
+        
+        vec_size = result-1;
+
+        // Возвращаем true, если были удалены какие-то элементы
+        return vec_size < size;
+        
+
+    }
+
     // Получение размера вектора
     template <typename T>
     int Vector<T>::size() const noexcept {
-        return vec_size;
+        return this->vec_size;
     }
 }

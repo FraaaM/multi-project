@@ -20,5 +20,6 @@ namespace MCherevko {
 			void print() const noexcept;
 			bool remove_first(const T& value) noexcept;
 			int size() const noexcept;
+			bool remove_all(const T& value);
 	};
 }
