@@ -92,12 +92,6 @@ namespace MCherevko {
     template <typename T>
     bool Vector<T>::remove_all(const T& value) {
         size_t first = 0, result = 0;
-        /*T* new_arr = new T[capacity];
-            for (int i = 0; i < vec_size; ++i) {
-                new_arr[i] = arr[i];
-            }
-            delete[] arr;
-            arr = new_arr;*/
         while(first < vec_size ) {
             if (arr[first] != value && result == first ) {
                 first++;
@@ -113,23 +107,18 @@ namespace MCherevko {
                 result++;
             }
         }
-
+        
+        T* new_arr = new T[result-1];
+        for (int i = 0; i < result-1; ++i) {
+            new_arr[i] = arr[i];
+        }
+        delete[] arr;
+        arr = new_arr;
+        
         int size = vec_size;
-        
-        /*for (int i = size - 1; i >= result; i--) {
-            delete arr[i];
-            vec_size--;
-        }*/    
-        /*for(int i = 0; i < vec_size; i++) {
-            if (arr[i] == value) { return false };
-            else {return true};
-        }*/
-        
-        vec_size = result-1;
-
+        vec_size = result - 1;
         // Возвращаем true, если были удалены какие-то элементы
-        return vec_size < size;
-        
+        return vec_size  < size;
 
     }
 
